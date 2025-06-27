@@ -493,7 +493,6 @@ func (bw *qemu) GetReleaseData(ctx context.Context, cfg *Config) (*apko_build.Re
 		nil,
 		nil,
 		bufWriter,
-		false,
 		[]string{"sh", "-c", "cat /etc/os-release"},
 	)
 
