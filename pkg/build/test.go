@@ -427,13 +427,14 @@ func (t *Test) buildWorkspaceConfig(ctx context.Context, imgRef, pkgName string,
 		{Source: "/etc/resolv.conf", Destination: container.DefaultResolvConfPath},
 	}
 
+	resolvedCacheDir := ""
 	if t.CacheDir != "" {
 		if fi, err := os.Stat(t.CacheDir); err == nil && fi.IsDir() {
 			mountSource, err := realpath.Realpath(t.CacheDir)
 			if err != nil {
 				return nil, fmt.Errorf("could not resolve path for --cache-dir: %s : %w", t.CacheDir, err)
 			}
-
+			resolvedCacheDir = mountSource
 			mounts = append(mounts, container.BindMount{Source: mountSource, Destination: container.DefaultCacheDir})
 		} else {
 			log.Debugf("--cache-dir %s not a dir; skipping", t.CacheDir)
@@ -450,7 +451,7 @@ func (t *Test) buildWorkspaceConfig(ctx context.Context, imgRef, pkgName string,
 		Mounts:       mounts,
 		Capabilities: caps,
 		WorkspaceDir: t.WorkspaceDir,
-		CacheDir:     t.CacheDir,
+		CacheDir:     resolvedCacheDir,
 		Environment:  map[string]string{},
 		RunAsUID:     runAsUID(imgcfg.Accounts),
 		RunAs:        runAs(imgcfg.Accounts),

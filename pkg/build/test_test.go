@@ -125,7 +125,7 @@ func TestBuildWorkspaceConfig(t *testing.T) {
 				want := wantBase
 				want.Mounts = append(want.Mounts, container.BindMount{Source: tmpDirReal, Destination: "/var/cache/melange"})
 				want.Environment = map[string]string{"FOO": "bar", "BAZ": "zzz", "HOME": "/root"}
-				want.CacheDir = tmpDir
+				want.CacheDir = tmpDirReal
 				return &want
 			}(),
 		},
